@@ -3,81 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cihaza Uyğun Sürətli Banana Oyunu</title>
+    <title>Sürətli Vurma Oyunu</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Changa+One:ital@0;1&family=Varela+Round&display=swap');
+        
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #5D3FD3; 
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            color: #fff;
-            padding: 20px;
+            background: linear-gradient(135deg, #FFC107, #FF9800, #FFC107);
+            font-family: 'Varela Round', sans-serif;
+            color: #333;
+            padding: 10px; /* Biraz boşluq saxla */
+            overflow: hidden; /* Əsas dəyişiklik: Ekrana tam yerləşməsi üçün */
+        }
+
+        #ana-konteyner {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center; /* Kontainerları mərkəzə gətirir */
+            gap: 20px; /* Aralıq azaldıldı */
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto; /* Üst marjin silindi */
+            padding-top: 10px;
+            box-sizing: border-box;
         }
 
         #oyun-konteyner {
+            flex-shrink: 0;
+            width: 650px; /* Bir az azaldıldı */
+            max-width: 95%; /* Mobil üçün təminat */
             text-align: center;
-            padding: 30px;
-            background-color: #7B68EE; 
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            border-radius: 20px;
-            border: 5px solid #FFD700; 
-            transition: transform 0.3s ease;
-            width: 640px; 
-            max-width: 90%; /* Mobil uyğunluq üçün */
+            padding: 25px; /* Padding azaldıldı */
+            background-color: #FFFDE7;
+            border-radius: 35px;
+            border: 10px solid #8BC34A;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 50px rgba(139, 195, 74, 0.5);
+            position: relative;
+            transition: all 0.3s ease-in-out;
+            z-index: 1;
+        }
+        
+        #oyun-konteyner:hover {
+            transform: translateY(-5px) scale(1.0);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 70px rgba(139, 195, 74, 0.7);
         }
 
         #oyun-sahəsi {
-            border: 5px dashed #FFD700; 
-            background-color: #87CEEB; 
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewport="0 0 100 100" style="fill:black;font-size:18px;"><text y="50%">🖐️</text></svg>') 15 15, auto; 
+            border: 6px dashed #FF9800;
+            background-color: #E0F2F7;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewport="0 0 100 100" style="fill:black;font-size:20px;"><text y="50%">👆</text></svg>') 17 17, auto; 
             display: block;
-            margin: 20px auto 15px;
-            border-radius: 10px;
-            touch-action: manipulation; /* Mobil cihazlarda gecikməni azaldır */
+            margin: 15px auto 15px; /* Marjin azaldıldı */
+            border-radius: 20px;
+            touch-action: manipulation; 
+            max-width: 100%;
+            height: 400px; /* Hündürlük azaldıldı */
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
         }
 
-        h1 {
-            color: #FFD700; 
-            text-shadow: 2px 2px #5D3FD3;
-            margin-bottom: 5px;
-            font-size: 2.5em;
-        }
+        /* <h1> stil silindi, çünki element silinib */
 
         p {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #F0FFFF; 
+            font-size: 1.5em; /* Font ölçüsü azaldıldı */
+            font-weight: 600;
+            color: #4CAF50;
+            margin-top: 5px;
+            margin-bottom: 10px;
         }
 
         #xal-gosterici {
-            color: #FF4500; 
-            font-size: 1.2em;
+            color: #FF5722;
+            font-size: 1.3em;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        #best-score-gosterici {
+            color: #00C853;
+            font-size: 1.1em;
+            display: block;
+            margin-top: 5px;
         }
         
         #bar-konteyner {
             width: 100%;
-            background-color: #333;
-            border-radius: 5px;
+            background-color: #BDBDBD;
+            border-radius: 15px;
             overflow: hidden;
-            margin-top: 10px;
-            border: 2px solid #fff;
+            margin-top: 15px; /* Marjin azaldıldı */
+            border: 4px solid #757575;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
         }
 
         #sağlamlıq-barı {
-            height: 25px;
+            height: 30px; /* Hündürlük azaldıldı */
             width: 100%; 
             background-color: #4CAF50; 
-            transition: width 0.1s linear; 
-            text-align: right;
-            line-height: 25px;
+            transition: width 0.1s linear, background-color 0.2s; 
+            text-align: center;
+            line-height: 30px;
             color: white;
             font-weight: bold;
-            padding-right: 10px;
+            font-family: 'Changa One', cursive;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            font-size: 1.1em; /* Font ölçüsü azaldıldı */
             box-sizing: border-box;
+            background-image: linear-gradient(45deg, rgba(255,255,255,.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.2) 50%, rgba(255,255,255,.2) 75%, transparent 75%, transparent);
+            background-size: 15px 15px;
         }
+        #sağlamlıq-barı.critial { background-color: #FF5722; }
+        #sağlamlıq-barı.warning { background-color: #FFC107; }
+        #sağlamlıq-barı.normal { background-color: #4CAF50; }
+
 
         #oyun-bitdi-mesaj {
             position: absolute;
@@ -85,109 +126,340 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #FFD700;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #FFEB3B;
             display: none; 
             justify-content: center;
             align-items: center;
             flex-direction: column;
             z-index: 10;
-            font-size: 3em;
-            border-radius: 20px;
+            font-size: 2.5em; /* Font ölçüsü azaldıldı */
+            border-radius: 35px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+        }
+        
+        #oyun-bitdi-mesaj h2 {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 1.3em;
+            color: #FF5722;
+            -webkit-text-stroke: 1px #FFEB3B;
+        }
+
+        #oyun-bitdi-mesaj p {
+            color: #E0F2F7;
+            font-size: 0.8em;
+            margin: 8px 0;
+        }
+
+        #oyun-bitdi-mesaj button {
+            padding: 12px 25px; /* Padding azaldıldı */
+            font-size: 1.3em; /* Font ölçüsü azaldıldı */
+            cursor: pointer;
+            border-radius: 10px;
+            background-color: #FF5722;
+            color: white;
+            border: 3px solid #FFC107;
+            box-shadow: 0 5px #E64A19;
+            transition: all 0.1s ease;
+            font-family: 'Luckiest Guy', cursive;
+            letter-spacing: 1px;
+        }
+
+        #oyun-bitdi-mesaj button:hover {
+            background-color: #E64A19;
+            transform: translateY(-1px);
+        }
+
+        #oyun-bitdi-mesaj button:active {
+            box-shadow: 0 1px #E64A19;
+            transform: translateY(2px);
         }
         
         .klik-effekti {
             position: absolute;
-            font-size: 20px;
+            font-size: 25px;
             font-weight: bold;
-            color: #FFD700;
             pointer-events: none;
             opacity: 1;
             animation: firlanma 0.8s ease-out forwards;
+            z-index: 11;
+            font-family: 'Luckiest Guy', cursive;
         }
 
         @keyframes firlanma {
             0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+            100% { transform: translateY(-70px) scale(1.5); opacity: 0; }
+        }
+
+        #sıralama-konteyner {
+            flex-shrink: 0;
+            width: 250px; /* En azaldıldı */
+            max-width: 95%; /* Mobil üçün təminat */
+            padding: 20px; /* Padding azaldıldı */
+            background-color: #FFEB3B;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            color: #333;
+            height: fit-content;
+            border: 5px solid #FFC107;
+            transition: all 0.3s ease-in-out;
+            margin-top: 0; /* Marjin silindi */
+            z-index: 0;
+        }
+        
+        #sıralama-konteyner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5);
+        }
+
+        #sıralama-konteyner h2 {
+            font-family: 'Changa One', cursive;
+            font-size: 1.8em; /* Font ölçüsü azaldıldı */
+            margin-top: 0;
+            border-bottom: 3px solid #FF9800;
+            padding-bottom: 8px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            color: #FF5722;
+        }
+
+        #sıralama-listi {
+            list-style: none;
+            padding: 0;
+            font-size: 1em;
+        }
+
+        #sıralama-listi li {
+            padding: 8px 4px;
+            border-bottom: 1px dashed #FFB74D;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        #sıralama-listi li:nth-child(1) { background-color: rgba(255, 215, 0, 0.3); font-weight: bold; }
+        #sıralama-listi li:nth-child(2) { background-color: rgba(192, 192, 192, 0.3); }
+        #sıralama-listi li:nth-child(3) { background-color: rgba(205, 127, 50, 0.3); }
+        #sıralama-listi li:hover { background-color: rgba(255, 224, 130, 0.5); }
+
+
+        #sıralama-listi li:last-child {
+            border-bottom: none;
+        }
+
+        .sıra-xalı {
+            color: #FFFFFF;
+            font-weight: bold;
+            background-color: #FF5722;
+            padding: 2px 7px;
+            border-radius: 10px;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+            font-size: 0.9em;
+        }
+
+        .sıra-adı {
+            font-style: italic;
+            color: #424242;
+        }
+        
+        @media (max-width: 992px) {
+            #ana-konteyner {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                padding-top: 5px;
+            }
+            #oyun-konteyner, #sıralama-konteyner {
+                width: 95%;
+                max-width: 550px;
+                padding: 20px;
+            }
+            #oyun-sahəsi {
+                height: 300px;
+            }
+            #oyun-konteyner {
+                order: -1; /* Oyunu yuxarıya qaldırır */
+            }
+            p {
+                font-size: 1.4em;
+            }
+            #oyun-bitdi-mesaj {
+                font-size: 2em;
+            }
+            #oyun-bitdi-mesaj button {
+                font-size: 1.2em;
+                padding: 10px 22px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            #oyun-konteyner, #sıralama-konteyner {
+                padding: 15px;
+            }
+            p {
+                font-size: 1.2em;
+            }
+            #oyun-sahəsi {
+                height: 220px;
+            }
+            #sağlamlıq-barı {
+                height: 25px;
+                font-size: 1em;
+                line-height: 25px;
+            }
+            #oyun-bitdi-mesaj {
+                font-size: 1.8em;
+            }
+            #sıralama-konteyner h2 {
+                font-size: 1.6em;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="oyun-konteyner">
-        <h1>🍌 Banana Tıklama Oyunu 🎯</h1>
-        <p>Xal: <span id="xal-gosterici">0</span></p>
-        
-        <div id="bar-konteyner">
-            <div id="sağlamlıq-barı">Enerji</div>
+    <div id="ana-konteyner">
+        <div id="oyun-konteyner">
+            <p>Xal: <span id="xal-gosterici">0</span> <span id="best-score-gosterici"></span></p>
+            
+            <div id="bar-konteyner">
+                <div id="sağlamlıq-barı" class="normal">ENERJİ</div>
+            </div>
+
+            <canvas id="oyun-sahəsi" width="650" height="400">
+                Brauzeriniz Canvas elementini dəstəkləmir.
+            </canvas>
+
+            <div id="oyun-bitdi-mesaj">
+                <h2>OYUN BİTDİ!</h2>
+                <p>Sizin Xalınız: <span id="son-xal">0</span></p>
+                <p id="final-best-score">Ən Yaxşı Yerli Xal: 0</p>
+                <button onclick="window.location.reload()">Yenidən Başla</button>
+            </div>
         </div>
 
-        <canvas id="oyun-sahəsi" width="600" height="400">
-            Brauzeriniz Canvas elementini dəstəkləmir.
-        </canvas>
-
-        <div id="oyun-bitdi-mesaj">
-            <h2>OYUN BİTDİ!</h2>
-            <p>Sizin Xalınız: <span id="son-xal">0</span></p>
-            <button onclick="window.location.reload()" style="padding: 10px 20px; font-size: 1.2em; cursor: pointer; border-radius: 5px;">Yenidən Başla</button>
+        <div id="sıralama-konteyner">
+            <h2>🏆 Sıralama 🏆</h2>
+            <ul id="sıralama-listi">
+                <li>Yüklənir...</li>
+            </ul>
         </div>
     </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-fcBC0V-dLgKJ5tbqBMS_nJlvv3z-nCs",
+            authDomain: "banan-5e794.firebaseapp.com",
+            projectId: "banan-5e794",
+            storageBucket: "banan-5e794.firebasestorage.app",
+            messagingSenderId: "646517025148",
+            appId: "1:646517025148:web:8fd6ec0a1f96d8c3c9dcf9",
+            measurementId: "G-LRJD9W7YHE"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         const canvas = document.getElementById('oyun-sahəsi');
         const ctx = canvas.getContext('2d');
         const xalGosterici = document.getElementById('xal-gosterici');
         const sağlamlıqBarı = document.getElementById('sağlamlıq-barı');
         const oyunBitdiMesaj = document.getElementById('oyun-bitdi-mesaj');
         const sonXalGosterici = document.getElementById('son-xal');
+        const sıralamaListi = document.getElementById('sıralama-listi');
+        const bestScoreGosterici = document.getElementById('best-score-gosterici');
+        const finalBestScoreGosterici = document.getElementById('final-best-score');
+        
+        const LOCAL_STORAGE_KEY = 'banana_best_score';
+        const USER_NAME_KEY = 'banana_user_name';
+        let cariUserName = '';
 
-        // Cihazın mobil olub olmadığını yoxlayan funksiya
         function isMobile() {
             return /Mobi|Android|iPhone|iPad|Windows Phone/i.test(navigator.userAgent);
         }
 
-        let xal = 0;
-        let bananaX = 50;
-        let bananaY = 50;
-        const bananaÖlçüsü = 50; 
-        let sonYenilənməVaxtı = 0;
+        function getBestScore() {
+            return parseInt(localStorage.getItem(LOCAL_STORAGE_KEY) || '0', 10);
+        }
 
-        // Cihazdan asılı olaraq sürəti təyin et (ms)
-        const mobilSürət = 200; // Telefon üçün 0.2 saniyə
-        const desktopSürət = 400; // Kompüter üçün 0.4 saniyə
+        function updateBestScore(newScore) {
+            const currentBest = getBestScore();
+            if (newScore > currentBest) {
+                localStorage.setItem(LOCAL_STORAGE_KEY, newScore);
+                bestScoreGosterici.textContent = `Ən Yaxşı Yerli Xal: ${newScore}`;
+            }
+        }
+
+        let xal = 0;
+        let sonYenilənməVaxtı = 0;
+        const obyektÖlçüsü = 60;
+
+        const mobilSürət = 350; /* Mobil sürət azaldıldı */
+        const desktopSürət = 400;
         const yenilənməAralığı = isMobile() ? mobilSürət : desktopSürət; 
 
         let firlanmaBucağı = 0;
         const firlanmaSürəti = 0.1;
 
         let cariBarDəyəri = 100; 
-        const azalmaSürəti = 0.05; 
-        const artırmaDəyəri = 40; 
-        let oyunAktiv = true;
+        const azalmaSürəti = 0.07;
+        const artırmaDəyəri = 30;
+        const bombaCəzası = 40;
+        let oyunAktiv = false;
 
-        function muzuÇək() {
+        let cariObyekt = null; 
+
+        function təsadüfiYerYarat() {
+            return {
+                x: Math.random() * (canvas.width - obyektÖlçüsü),
+                y: Math.random() * (canvas.height - obyektÖlçüsü),
+                növü: Math.random() < 0.7 ? 'banana' : 'bomba', 
+                ölçü: obyektÖlçüsü,
+                fırlanma: 0 
+            };
+        }
+
+        function obyektləriÇək() {
+            if (!cariObyekt) return;
+            
             ctx.save();
-            const mərkəzX = bananaX + bananaÖlçüsü / 2;
-            const mərkəzY = bananaY + bananaÖlçüsü / 2;
+            const mərkəzX = cariObyekt.x + cariObyekt.ölçü / 2;
+            const mərkəzY = cariObyekt.y + cariObyekt.ölçü / 2;
+            
             ctx.translate(mərkəzX, mərkəzY);
             ctx.rotate(firlanmaBucağı);
             ctx.translate(-mərkəzX, -mərkəzY);
 
-            ctx.font = `${bananaÖlçüsü}px Arial`;
+            ctx.font = `${cariObyekt.ölçü}px Arial`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('🍌', mərkəzX, mərkəzY);
+            
+            if (cariObyekt.növü === 'banana') {
+                ctx.fillText('🍌', mərkəzX, mərkəzY);
+            } else {
+                ctx.fillText('💣', mərkəzX, mərkəzY);
+            }
 
             ctx.restore();
         }
         
-        function təsadüfiYer() {
-            bananaX = Math.random() * (canvas.width - bananaÖlçüsü);
-            bananaY = Math.random() * (canvas.height - bananaÖlçüsü);
+        function obyektYeriYenilə() {
+            cariObyekt = təsadüfiYerYarat();
         }
 
-        function yaratKlikEffekti(x, y) {
+        function yaratKlikEffekti(x, y, növü) {
             const effekt = document.createElement('div');
-            effekt.textContent = '+1';
+            
+            if (növü === 'banana') {
+                effekt.textContent = '+1';
+                effekt.style.color = '#8BC34A';
+            } else {
+                effekt.textContent = '-3 XAL!';
+                effekt.style.color = '#FF5722';
+            }
+            
             effekt.classList.add('klik-effekti');
             
             const rect = canvas.getBoundingClientRect();
@@ -208,17 +480,20 @@
 
             if (cariBarDəyəri < 0) {
                 cariBarDəyəri = 0;
+            } else if (cariBarDəyəri > 100) {
+                 cariBarDəyəri = 100;
             }
 
             sağlamlıqBarı.style.width = cariBarDəyəri + '%';
-            sağlamlıqBarı.textContent = `Enerji (${Math.round(cariBarDəyəri)}%)`;
+            sağlamlıqBarı.textContent = `ENERJİ (${Math.round(cariBarDəyəri)}%)`;
             
+            sağlamlıqBarı.classList.remove('normal', 'warning', 'critial');
             if (cariBarDəyəri < 25) {
-                sağlamlıqBarı.style.backgroundColor = '#FF4500'; 
+                sağlamlıqBarı.classList.add('critial');
             } else if (cariBarDəyəri < 50) {
-                sağlamlıqBarı.style.backgroundColor = '#FFD700'; 
+                sağlamlıqBarı.classList.add('warning');
             } else {
-                sağlamlıqBarı.style.backgroundColor = '#4CAF50'; 
+                sağlamlıqBarı.classList.add('normal');
             }
 
             if (cariBarDəyəri <= 0) {
@@ -226,13 +501,70 @@
                 oyunuBitir();
             }
         }
+        
+        function xalıYaddaSaxla(yekunXal) {
+            if (yekunXal === 0) return;
 
-        function oyunuBitir() {
-            sonXalGosterici.textContent = xal;
-            oyunBitdiMesaj.style.display = 'flex';
-            canvas.style.opacity = '0.3';
+            db.collection("leaderboard").add({
+                ad: cariUserName,
+                xal: yekunXal, 
+                tarix: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                sıralamanıYüklə();
+            })
+            .catch((error) => {
+                console.error("Xal yazılarkən xəta:", error);
+                
+                if (error.code === 'permission-denied') {
+                    // alert("XƏTA: Firebase icazələriniz (Rules) düzgün deyil. Yenidən yoxlayın.");
+                } else {
+                    // alert("XƏTA: Məlumat bazasına qoşularkən problem yarandı.");
+                }
+            });
         }
 
+        function sıralamanıYüklə() {
+            sıralamaListi.innerHTML = '<li><span class="sıra-adı">Yüklənir...</span></li>';
+
+            db.collection("leaderboard")
+              .orderBy("xal", "desc")
+              .limit(10) 
+              .get()
+              .then((snapshot) => {
+                sıralamaListi.innerHTML = ''; 
+                if (snapshot.empty) {
+                    sıralamaListi.innerHTML = '<li>Hələlik heç bir nəticə yoxdur.</li>';
+                    return;
+                }
+                
+                let sıra = 1;
+                snapshot.forEach((doc) => {
+                  const data = doc.data();
+                  const li = document.createElement('li');
+                  li.innerHTML = `
+                    <span>${sıra}. <span class="sıra-adı">${data.ad}</span></span> 
+                    <span class="sıra-xalı">${data.xal}</span>
+                  `;
+                  sıralamaListi.appendChild(li);
+                  sıra++;
+                });
+              })
+              .catch((error) => {
+                sıralamaListi.innerHTML = `<li><span class="sıra-adı">Xəta: Məlumat oxunmadı.</span></li>`;
+                console.error("Sıralama xətası:", error);
+              });
+        }
+
+        function oyunuBitir() {
+            updateBestScore(xal);
+            sonXalGosterici.textContent = xal;
+            finalBestScoreGosterici.textContent = `Ən Yaxşı Yerli Xal: ${getBestScore()}`;
+            oyunBitdiMesaj.style.display = 'flex';
+            canvas.style.opacity = '0.3';
+            
+            xalıYaddaSaxla(xal); 
+        }
 
         function yenilə(cariVaxt) {
             if (!oyunAktiv) return;
@@ -244,58 +576,82 @@
             firlanmaBucağı += firlanmaSürəti;
 
             if (cariVaxt - sonYenilənməVaxtı > yenilənməAralığı) {
-                təsadüfiYer();
+                obyektYeriYenilə();
                 sonYenilənməVaxtı = cariVaxt;
             }
 
-            muzuÇək();
+            obyektləriÇək();
 
             requestAnimationFrame(yenilə);
         }
 
         canvas.addEventListener('click', function(e) {
-            if (!oyunAktiv) return;
+            if (!oyunAktiv || !cariObyekt) return;
 
             const rect = canvas.getBoundingClientRect();
             const klikX = e.clientX - rect.left;
             const klikY = e.clientY - rect.top;
 
             const tolerantlıq = 5;
+            
             if (
-                klikX >= bananaX - tolerantlıq &&
-                klikX <= bananaX + bananaÖlçüsü + tolerantlıq &&
-                klikY >= bananaY - tolerantlıq &&
-                klikY <= bananaY + bananaÖlçüsü + tolerantlıq
+                klikX >= cariObyekt.x - tolerantlıq &&
+                klikX <= cariObyekt.x + cariObyekt.ölçü + tolerantlıq &&
+                klikY >= cariObyekt.y - tolerantlıq &&
+                klikY <= cariObyekt.y + cariObyekt.ölçü + tolerantlıq
             ) {
-                xal++;
+                if (cariObyekt.növü === 'banana') {
+                    xal++;
+                    cariBarDəyəri += artırmaDəyəri;
+                    yaratKlikEffekti(klikX, klikY, 'banana');
+                } else { 
+                    xal = Math.max(0, xal - 3); 
+                    cariBarDəyəri -= bombaCəzası; 
+                    yaratKlikEffekti(klikX, klikY, 'bomba');
+                }
+                
                 xalGosterici.textContent = xal;
                 
-                cariBarDəyəri += artırmaDəyəri;
-                if (cariBarDəyəri > 100) {
-                    cariBarDəyəri = 100;
-                }
-
-                yaratKlikEffekti(klikX, klikY);
-
-                təsadüfiYer();
+                obyektYeriYenilə();
                 sonYenilənməVaxtı = performance.now();
+                barıYenilə();
             }
         });
         
-        // Mobil cihazlar üçün toxunma (touch) hadisəsini əlavə et
         canvas.addEventListener('touchstart', function(e) {
-            e.preventDefault(); // Default toxunma hərəkətlərini dayandır (scroll kimi)
+            e.preventDefault(); 
             const touch = e.touches[0];
             
-            // Toxunma hadisəsini klik hadisəsinə çevirərək eyni məntiqi tətbiq edirik
             canvas.dispatchEvent(new MouseEvent('click', {
                 clientX: touch.clientX,
                 clientY: touch.clientY
             }));
         });
+        
+        function oyunuBaslat() {
+            let storedName = localStorage.getItem(USER_NAME_KEY);
+            let ad;
 
-        təsadüfiYer(); 
-        yenilə(0); 
+            if (!storedName) {
+                ad = prompt("Zəhmət olmasa adınızı daxil edin:", "Oyunçu");
+                if (ad === null || ad.trim() === "") {
+                    ad = "Anonim";
+                }
+                localStorage.setItem(USER_NAME_KEY, ad);
+            } else {
+                ad = storedName;
+            }
+            
+            cariUserName = ad;
+            oyunAktiv = true;
+            obyektYeriYenilə(); 
+            yenilə(0); 
+        }
+
+        bestScoreGosterici.textContent = `Ən Yaxşı Yerli Xal: ${getBestScore()}`;
+        sıralamanıYüklə(); 
+        
+        oyunuBaslat();
     </script>
 </body>
 </html>

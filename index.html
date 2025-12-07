@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cihaza Uyğun Sürətli Banana Oyunu</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #5D3FD3; 
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+            padding: 20px;
+        }
+
+        #oyun-konteyner {
+            text-align: center;
+            padding: 30px;
+            background-color: #7B68EE; 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            border: 5px solid #FFD700; 
+            transition: transform 0.3s ease;
+            width: 640px; 
+            max-width: 90%; /* Mobil uyğunluq üçün */
+        }
+
+        #oyun-sahəsi {
+            border: 5px dashed #FFD700; 
+            background-color: #87CEEB; 
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewport="0 0 100 100" style="fill:black;font-size:18px;"><text y="50%">🖐️</text></svg>') 15 15, auto; 
+            display: block;
+            margin: 20px auto 15px;
+            border-radius: 10px;
+            touch-action: manipulation; /* Mobil cihazlarda gecikməni azaldır */
+        }
+
+        h1 {
+            color: #FFD700; 
+            text-shadow: 2px 2px #5D3FD3;
+            margin-bottom: 5px;
+            font-size: 2.5em;
+        }
+
+        p {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #F0FFFF; 
+        }
+
+        #xal-gosterici {
+            color: #FF4500; 
+            font-size: 1.2em;
+        }
+        
+        #bar-konteyner {
+            width: 100%;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+            border: 2px solid #fff;
+        }
+
+        #sağlamlıq-barı {
+            height: 25px;
+            width: 100%; 
+            background-color: #4CAF50; 
+            transition: width 0.1s linear; 
+            text-align: right;
+            line-height: 25px;
+            color: white;
+            font-weight: bold;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+
+        #oyun-bitdi-mesaj {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #FFD700;
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            font-size: 3em;
+            border-radius: 20px;
+        }
+        
+        .klik-effekti {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFD700;
+            pointer-events: none;
+            opacity: 1;
+            animation: firlanma 0.8s ease-out forwards;
+        }
+
+        @keyframes firlanma {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="oyun-konteyner">
+        <h1>🍌 Banana Tıklama Oyunu 🎯</h1>
+        <p>Xal: <span id="xal-gosterici">0</span></p>
+        
+        <div id="bar-konteyner">
+            <div id="sağlamlıq-barı">Enerji</div>
+        </div>
+
+        <canvas id="oyun-sahəsi" width="600" height="400">
+            Brauzeriniz Canvas elementini dəstəkləmir.
+        </canvas>
+
+        <div id="oyun-bitdi-mesaj">
+            <h2>OYUN BİTDİ!</h2>
+            <p>Sizin Xalınız: <span id="son-xal">0</span></p>
+            <button onclick="window.location.reload()" style="padding: 10px 20px; font-size: 1.2em; cursor: pointer; border-radius: 5px;">Yenidən Başla</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('oyun-sahəsi');
+        const ctx = canvas.getContext('2d');
+        const xalGosterici = document.getElementById('xal-gosterici');
+        const sağlamlıqBarı = document.getElementById('sağlamlıq-barı');
+        const oyunBitdiMesaj = document.getElementById('oyun-bitdi-mesaj');
+        const sonXalGosterici = document.getElementById('son-xal');
+
+        // Cihazın mobil olub olmadığını yoxlayan funksiya
+        function isMobile() {
+            return /Mobi|Android|iPhone|iPad|Windows Phone/i.test(navigator.userAgent);
+        }
+
+        let xal = 0;
+        let bananaX = 50;
+        let bananaY = 50;
+        const bananaÖlçüsü = 50; 
+        let sonYenilənməVaxtı = 0;
+
+        // Cihazdan asılı olaraq sürəti təyin et (ms)
+        const mobilSürət = 200; // Telefon üçün 0.2 saniyə
+        const desktopSürət = 400; // Kompüter üçün 0.4 saniyə
+        const yenilənməAralığı = isMobile() ? mobilSürət : desktopSürət; 
+
+        let firlanmaBucağı = 0;
+        const firlanmaSürəti = 0.1;
+
+        let cariBarDəyəri = 100; 
+        const azalmaSürəti = 0.05; 
+        const artırmaDəyəri = 40; 
+        let oyunAktiv = true;
+
+        function muzuÇək() {
+            ctx.save();
+            const mərkəzX = bananaX + bananaÖlçüsü / 2;
+            const mərkəzY = bananaY + bananaÖlçüsü / 2;
+            ctx.translate(mərkəzX, mərkəzY);
+            ctx.rotate(firlanmaBucağı);
+            ctx.translate(-mərkəzX, -mərkəzY);
+
+            ctx.font = `${bananaÖlçüsü}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🍌', mərkəzX, mərkəzY);
+
+            ctx.restore();
+        }
+        
+        function təsadüfiYer() {
+            bananaX = Math.random() * (canvas.width - bananaÖlçüsü);
+            bananaY = Math.random() * (canvas.height - bananaÖlçüsü);
+        }
+
+        function yaratKlikEffekti(x, y) {
+            const effekt = document.createElement('div');
+            effekt.textContent = '+1';
+            effekt.classList.add('klik-effekti');
+            
+            const rect = canvas.getBoundingClientRect();
+            effekt.style.left = (rect.left + x + window.scrollX) + 'px';
+            effekt.style.top = (rect.top + y + window.scrollY) + 'px';
+
+            document.body.appendChild(effekt);
+
+            effekt.addEventListener('animationend', () => {
+                effekt.remove();
+            });
+        }
+
+        function barıYenilə() {
+            if (!oyunAktiv) return;
+
+            cariBarDəyəri -= azalmaSürəti;
+
+            if (cariBarDəyəri < 0) {
+                cariBarDəyəri = 0;
+            }
+
+            sağlamlıqBarı.style.width = cariBarDəyəri + '%';
+            sağlamlıqBarı.textContent = `Enerji (${Math.round(cariBarDəyəri)}%)`;
+            
+            if (cariBarDəyəri < 25) {
+                sağlamlıqBarı.style.backgroundColor = '#FF4500'; 
+            } else if (cariBarDəyəri < 50) {
+                sağlamlıqBarı.style.backgroundColor = '#FFD700'; 
+            } else {
+                sağlamlıqBarı.style.backgroundColor = '#4CAF50'; 
+            }
+
+            if (cariBarDəyəri <= 0) {
+                oyunAktiv = false;
+                oyunuBitir();
+            }
+        }
+
+        function oyunuBitir() {
+            sonXalGosterici.textContent = xal;
+            oyunBitdiMesaj.style.display = 'flex';
+            canvas.style.opacity = '0.3';
+        }
+
+
+        function yenilə(cariVaxt) {
+            if (!oyunAktiv) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            barıYenilə();
+
+            firlanmaBucağı += firlanmaSürəti;
+
+            if (cariVaxt - sonYenilənməVaxtı > yenilənməAralığı) {
+                təsadüfiYer();
+                sonYenilənməVaxtı = cariVaxt;
+            }
+
+            muzuÇək();
+
+            requestAnimationFrame(yenilə);
+        }
+
+        canvas.addEventListener('click', function(e) {
+            if (!oyunAktiv) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const klikX = e.clientX - rect.left;
+            const klikY = e.clientY - rect.top;
+
+            const tolerantlıq = 5;
+            if (
+                klikX >= bananaX - tolerantlıq &&
+                klikX <= bananaX + bananaÖlçüsü + tolerantlıq &&
+                klikY >= bananaY - tolerantlıq &&
+                klikY <= bananaY + bananaÖlçüsü + tolerantlıq
+            ) {
+                xal++;
+                xalGosterici.textContent = xal;
+                
+                cariBarDəyəri += artırmaDəyəri;
+                if (cariBarDəyəri > 100) {
+                    cariBarDəyəri = 100;
+                }
+
+                yaratKlikEffekti(klikX, klikY);
+
+                təsadüfiYer();
+                sonYenilənməVaxtı = performance.now();
+            }
+        });
+        
+        // Mobil cihazlar üçün toxunma (touch) hadisəsini əlavə et
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault(); // Default toxunma hərəkətlərini dayandır (scroll kimi)
+            const touch = e.touches[0];
+            
+            // Toxunma hadisəsini klik hadisəsinə çevirərək eyni məntiqi tətbiq edirik
+            canvas.dispatchEvent(new MouseEvent('click', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            }));
+        });
+
+        təsadüfiYer(); 
+        yenilə(0); 
+    </script>
+</body>
+</html>

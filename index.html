@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BANAN</title>
     <style>
+        /* FONT IMPORT - Dəyişiklik yoxdur */
         @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Changa+One:ital@0;1&family=Varela+Round&display=swap');
         
+        /* GLOBAL STYLES - Dəyişiklik yoxdur */
         body {
             display: flex;
             justify-content: center;
@@ -17,14 +19,16 @@
             font-family: 'Varela Round', sans-serif;
             color: #333;
             padding: 10px;
-            overflow: hidden;
+            overflow-x: hidden; /* X ekseni daşqınını aradan qaldırır */
+            box-sizing: border-box; /* Bütün elementlər üçün əlavə edildi */
         }
 
+        /* ANA KONTEYNER - Mobil üçün flex-wrap əlavə edildi */
         #ana-konteyner {
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap; /* Əsas Dəyişiklik: Mobildə alt-alta düşməsi üçün */
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Kontent yuxarıdan başlasın */
             gap: 20px;
             width: 100%;
             max-width: 1200px;
@@ -33,10 +37,11 @@
             box-sizing: border-box;
         }
 
+        /* OYUN KONTEYNERİ - Genişlik optimallaşdırıldı */
         #oyun-konteyner {
             flex-shrink: 0;
-            width: 650px;
-            max-width: 95%;
+            width: 650px; /* Desktop üçün əsas genişlik */
+            max-width: 95%; /* Mobildə ekranı doldurması üçün */
             text-align: center;
             padding: 25px;
             background-color: #FFFDE7;
@@ -46,6 +51,7 @@
             position: relative;
             transition: all 0.3s ease-in-out;
             z-index: 1;
+            box-sizing: border-box;
         }
         
         #oyun-konteyner:hover {
@@ -53,6 +59,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 70px rgba(139, 195, 74, 0.7);
         }
 
+        /* OYUN SAHƏSİ (CANVAS) - Dəyişiklik yoxdur, JS ilə ölçü tənzimlənəcək */
         #oyun-sahəsi {
             border: 6px dashed #FF9800;
             background-color: #E0F2F7;
@@ -61,12 +68,31 @@
             margin: 15px auto 15px;
             border-radius: 20px;
             touch-action: manipulation; 
-            max-width: 100%;
-            height: 400px;
+            width: 100%; /* Əsas Dəyişiklik: Konteynerin ölçüsünə uyğun olsun */
+            height: 400px; /* Hələlik sabit qalsın, JS-də tənzimlənə bilər */
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
             opacity: 0.3;
         }
         
+        /* SIRALAMA KONTEYNERİ - Genişlik və margin optimallaşdırıldı */
+        #sıralama-konteyner {
+            flex-shrink: 0;
+            width: 250px; /* Desktop üçün əsas genişlik */
+            max-width: 95%; /* Mobildə ekranı doldurması üçün */
+            padding: 20px;
+            background-color: #FFEB3B;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            color: #333;
+            height: fit-content;
+            border: 5px solid #FFC107;
+            transition: all 0.3s ease-in-out;
+            margin-top: 0;
+            z-index: 0;
+            box-sizing: border-box;
+        }
+
+        /* MƏLUMAT VƏ STATİSTİKA STİLLƏRİ - Dəyişiklik yoxdur */
         p {
             font-size: 1.5em;
             font-weight: 600;
@@ -88,7 +114,7 @@
             margin-top: 5px;
         }
 
-        /* Yeni stil: Təhlükəsizlik rejimi mesajı */
+        /* TƏHLÜKƏSİZLİK MESAJI - Dəyişiklik yoxdur */
         #təhlükəsizlik-mesaj {
             position: absolute;
             top: 15px;
@@ -98,19 +124,20 @@
             padding: 8px 15px;
             border-radius: 10px;
             font-weight: bold;
-            display: none; /* Başlanğıcda gizli */
+            display: none; 
             z-index: 9;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             font-family: 'Luckiest Guy', cursive;
             font-size: 1.1em;
             animation: pulse 1s infinite alternate;
         }
-
+        
         @keyframes pulse {
             from { transform: scale(1); background-color: #4CAF50; }
             to { transform: scale(1.05); background-color: #8BC34A; }
         }
-        
+
+        /* BAR KONTEYNERİ - Dəyişiklik yoxdur */
         #bar-konteyner {
             width: 100%;
             background-color: #BDBDB;
@@ -121,6 +148,7 @@
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
         }
 
+        /* SAĞLAMLIQ BARI - Dəyişiklik yoxdur */
         #sağlamlıq-barı {
             height: 30px;
             width: 100%; 
@@ -142,6 +170,7 @@
         #sağlamlıq-barı.normal { background-color: #4CAF50; }
 
 
+        /* OYUN BİTDİ & BAŞLAMA MENYUSU - Dəyişiklik yoxdur */
         #oyun-bitdi-mesaj, #başlama-menyu {
             position: absolute;
             top: 0;
@@ -244,23 +273,88 @@
             100% { transform: translateY(-70px) scale(1.5); opacity: 0; }
         }
 
-        #sıralama-konteyner {
-            flex-shrink: 0;
-            width: 250px;
-            max-width: 95%;
-            padding: 20px;
-            background-color: #FFEB3B;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            color: #333;
-            height: fit-content;
-            border: 5px solid #FFC107;
-            transition: all 0.3s ease-in-out;
-            margin-top: 0;
-            z-index: 0;
+        /* SIRALAMA LİSTİNİN XÜSUSİ STİLLƏRİ */
+        #sıralama-listi {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 0 0;
+            text-align: left;
+            counter-reset: ranking-counter;
+        }
+
+        #sıralama-listi li {
+            counter-increment: ranking-counter;
+            padding: 8px 0;
+            border-bottom: 1px dashed #FF9800;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        #sıralama-listi li:last-child {
+            border-bottom: none;
         }
         
-        /* Əlavə media sorğuları burada ola bilər */
+        #sıralama-listi li:nth-child(1) { color: #FFD700; font-size: 1.2em; } /* Qızıl */
+        #sıralama-listi li:nth-child(2) { color: #C0C0C0; font-size: 1.15em; } /* Gümüş */
+        #sıralama-listi li:nth-child(3) { color: #CD7F32; font-size: 1.1em; } /* Bürünc */
+
+        .sıra-adı {
+            font-weight: normal;
+            font-family: 'Varela Round', sans-serif;
+            margin-left: 5px;
+        }
+        
+        .sıra-xalı {
+            color: #FF5722;
+        }
+
+        /* ------------------------------------------- */
+        /* MOBİL DƏYİŞİKLİKLƏRİ (MEDIA QUERY) */
+        /* ------------------------------------------- */
+        @media (max-width: 950px) {
+            
+            #ana-konteyner {
+                flex-direction: column; /* Mobil görünüşdə alt-alta düzülmə */
+                align-items: center;
+            }
+
+            #oyun-konteyner {
+                padding: 15px;
+                border-width: 6px;
+                max-width: 98%; /* Kiçik ekranlarda daha çox yer qalsın */
+                width: 100%;
+                order: 1; /* Oyun konteyneri birinci gəlsin */
+            }
+
+            #oyun-sahəsi {
+                height: 300px; /* Mobil üçün hündürlük azaldıldı */
+                border-width: 4px;
+            }
+
+            #sıralama-konteyner {
+                width: 100%;
+                max-width: 98%;
+                order: 2; /* Sıralama konteyneri ikinci gəlsin */
+                margin-top: 20px;
+            }
+            
+            #oyun-bitdi-mesaj, #başlama-menyu {
+                font-size: 2em; /* Mobil üçün şrift kiçildildi */
+            }
+            
+            #oyun-bitdi-mesaj h2, #başlama-menyu h2 {
+                font-size: 1.1em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #oyun-sahəsi {
+                height: 250px; /* Çox kiçik ekranlar üçün hündürlük daha da azaldıldı */
+            }
+        }
     </style>
 </head>
 <body>
@@ -279,7 +373,7 @@
                 <div id="sağlamlıq-barı" class="normal">ENERJİ</div>
             </div>
 
-            <canvas id="oyun-sahəsi" width="600" height="400">
+            <canvas id="oyun-sahəsi">
                 Brauzeriniz Canvas elementini dəstəkləmir.
             </canvas>
 
@@ -384,7 +478,7 @@
 
         let cariObyekt = null; 
         let təhlükəsizlikRejimiAktiv = false;
-        const təhlükəsizlikMüddəti = 10000; // 10 saniyə (İstifadəçinin tələbinə uyğun olaraq dəyişdirildi)
+        const təhlükəsizlikMüddəti = 10000;
 
         let storedName = localStorage.getItem(USER_NAME_KEY);
         if (storedName) {
@@ -392,27 +486,25 @@
             cariUserName = storedName;
         }
         
-        // Bonus Meymunun gəlmə ehtimalı (Məsələn, 10 obyektə bir dəfə)
         const meymunGəlməEhtimalı = 0.1; 
 
         function təsadüfiYerYarat() {
             let növü;
             if (təhlükəsizlikRejimiAktiv) {
-                // Təhlükəsizlik rejimi aktivdirsə, yalnız banana gəlsin
                 növü = 'banana';
             } else {
-                // Normal rejimdə bomba və ya banana gələ bilər
                 const rand = Math.random();
                 if (rand < 0.7) {
                     növü = 'banana';
-                } else if (rand < 0.95) { // 0.7-0.95 aralığı bomba üçün (0.25 ehtimal)
+                } else if (rand < 0.95) {
                     növü = 'bomba';
-                } else { // 0.95-1.0 aralığı meymun üçün (0.05 ehtimal)
+                } else {
                     növü = 'meymun'; 
                 }
             }
             
             return {
+                // X və Y koordinatları üçün canvas.width/height istifadə edilir
                 x: Math.random() * (canvas.width - obyektÖlçüsü),
                 y: Math.random() * (canvas.height - obyektÖlçüsü),
                 növü: növü,
@@ -432,7 +524,10 @@
             ctx.rotate(firlanmaBucağı);
             ctx.translate(-mərkəzX, -mərkəzY);
 
-            ctx.font = `${cariObyekt.ölçü}px Arial`;
+            // Obyekt ölçüsü ekran genişliyinə görə tənzimlənə bilər (mobil üçün)
+            const cariObyektÖlçüsü = isMobile() ? obyektÖlçüsü * 0.8 : obyektÖlçüsü;
+            
+            ctx.font = `${cariObyektÖlçüsü}px Arial`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
@@ -481,8 +576,8 @@
                 effekt.textContent = '+1';
                 effekt.style.color = '#8BC34A';
             } else if (növü === 'bomba') {
-                effekt.textContent = '-3 XAL!';
-                effekt.style.color = '#FF5722';
+                effekt.textContent = təhlükəsizlikRejimiAktiv ? 'QORUNDU!' : '-3 XAL!';
+                effekt.style.color = təhlükəsizlikRejimiAktiv ? '#7289DA' : '#FF5722';
             } else if (növü === 'meymun') {
                 effekt.textContent = '🛡️ ZİREH! 🛡️';
                 effekt.style.color = '#7289DA';
@@ -491,8 +586,9 @@
             effekt.classList.add('klik-effekti');
             
             const rect = canvas.getBoundingClientRect();
-            effekt.style.left = (rect.left + x + window.scrollX) + 'px';
-            effekt.style.top = (rect.top + y + window.scrollY) + 'px';
+            // Koordinatları `body` yox, `canvas` konteynerinə görə tənzimləyin.
+            effekt.style.left = (rect.left + x) + 'px';
+            effekt.style.top = (rect.top + y) + 'px';
 
             document.body.appendChild(effekt);
 
@@ -610,45 +706,44 @@
             requestAnimationFrame(yenilə);
         }
 
-        canvas.addEventListener('click', function(e) {
-            if (!oyunAktiv || !cariObyekt) return;
+        // Təkrar kodun qarşısını almaq üçün funksiya yarat
+        function handleInteraction(klikX, klikY) {
+             if (!oyunAktiv || !cariObyekt) return;
+             
+             // Obyekt ölçüsü mobil üçün kiçik olduğu üçün tolerantlığı da tənzimləyin
+             const cariObyektÖlçüsü = isMobile() ? obyektÖlçüsü * 0.8 : obyektÖlçüsü; 
+             const tolerantlıq = isMobile() ? 15 : 5; 
 
-            const rect = canvas.getBoundingClientRect();
-            const klikX = e.clientX - rect.left;
-            const klikY = e.clientY - rect.top;
-
-            const tolerantlıq = 5;
-            
             if (
                 klikX >= cariObyekt.x - tolerantlıq &&
-                klikX <= cariObyekt.x + cariObyekt.ölçü + tolerantlıq &&
+                klikX <= cariObyekt.x + cariObyektÖlçüsü + tolerantlıq &&
                 klikY >= cariObyekt.y - tolerantlıq &&
-                klikY <= cariObyekt.y + cariObyekt.ölçü + tolerantlıq
+                klikY <= cariObyekt.y + cariObyektÖlçüsü + tolerantlıq
             ) {
-                if (cariObyekt.növü === 'banana') {
+                let obyektNövü = cariObyekt.növü;
+                
+                if (obyektNövü === 'banana') {
                     xal++;
                     cariBarDəyəri += artırmaDəyəri;
-                    yaratKlikEffekti(klikX, klikY, 'banana');
                     bananaSəsi.currentTime = 0;
                     bananaSəsi.play();
-                } else if (cariObyekt.növü === 'bomba') { 
-                    if (təhlükəsizlikRejimiAktiv) {
-                        yaratKlikEffekti(klikX, klikY, 'bomba'); 
-                        bombaSəsi.currentTime = 0;
-                        bombaSəsi.play();
-                    } else {
+                } else if (obyektNövü === 'bomba') { 
+                    if (!təhlükəsizlikRejimiAktiv) {
                         xal = Math.max(0, xal - 3); 
                         cariBarDəyəri -= bombaCəzası; 
-                        yaratKlikEffekti(klikX, klikY, 'bomba');
-                        bombaSəsi.currentTime = 0;
-                        bombaSəsi.play();
-                    }
-                } else if (cariObyekt.növü === 'meymun') {
+                    } 
+                    bombaSəsi.currentTime = 0;
+                    bombaSəsi.play();
+                } else if (obyektNövü === 'meymun') {
                     meymunSəsi.currentTime = 0;
                     meymunSəsi.play();
                     təhlükəsizlikRejiminiAktivləşdir();
-                    yaratKlikEffekti(klikX, klikY, 'meymun');
                 }
+                
+                // Klik effektini mərkəzdə göstərmək üçün
+                const mərkəzX = cariObyekt.x + cariObyektÖlçüsü / 2; 
+                const mərkəzY = cariObyekt.y + cariObyektÖlçüsü / 2;
+                yaratKlikEffekti(mərkəzX, mərkəzY, obyektNövü);
                 
                 xalGosterici.textContent = xal;
                 
@@ -657,61 +752,23 @@
                 updateBestScore(xal);
                 
                 if (cariBarDəyəri > 100) cariBarDəyəri = 100;
-                
-            } 
+            }
+        }
+
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const klikX = e.clientX - rect.left;
+            const klikY = e.clientY - rect.top;
+            handleInteraction(klikX, klikY);
         });
 
         canvas.addEventListener('touchstart', function(e) {
             e.preventDefault(); 
-            if (!oyunAktiv || !cariObyekt) return;
-
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
             const klikX = touch.clientX - rect.left;
             const klikY = touch.clientY - rect.top;
-
-            const tolerantlıq = 15;
-            
-            if (
-                klikX >= cariObyekt.x - tolerantlıq &&
-                klikX <= cariObyekt.x + cariObyekt.ölçü + tolerantlıq &&
-                klikY >= cariObyekt.y - tolerantlıq &&
-                klikY <= cariObyekt.y + cariObyekt.ölçü + tolerantlıq
-            ) {
-                if (cariObyekt.növü === 'banana') {
-                    xal++;
-                    cariBarDəyəri += artırmaDəyəri;
-                    yaratKlikEffekti(klikX, klikY, 'banana');
-                    bananaSəsi.currentTime = 0;
-                    bananaSəsi.play();
-                } else if (cariObyekt.növü === 'bomba') { 
-                    if (təhlükəsizlikRejimiAktiv) {
-                        yaratKlikEffekti(klikX, klikY, 'bomba');
-                        bombaSəsi.currentTime = 0;
-                        bombaSəsi.play();
-                    } else {
-                        xal = Math.max(0, xal - 3); 
-                        cariBarDəyəri -= bombaCəzası; 
-                        yaratKlikEffekti(klikX, klikY, 'bomba');
-                        bombaSəsi.currentTime = 0;
-                        bombaSəsi.play();
-                    }
-                } else if (cariObyekt.növü === 'meymun') {
-                    meymunSəsi.currentTime = 0;
-                    meymunSəsi.play();
-                    təhlükəsizlikRejiminiAktivləşdir();
-                    yaratKlikEffekti(klikX, klikY, 'meymun');
-                }
-                
-                xalGosterici.textContent = xal;
-                
-                obyektYeriYenilə();
-                sonYenilənməVaxtı = performance.now();
-                updateBestScore(xal);
-
-                if (cariBarDəyəri > 100) cariBarDəyəri = 100;
-
-            }
+            handleInteraction(klikX, klikY);
         }, { passive: false });
 
         function oyunuBaslat() {
@@ -735,20 +792,25 @@
             sonYenilənməVaxtı = performance.now();
             yenilə(performance.now());
         }
+        
+        // Canvas ölçüsünü tənzimləyən funksiya
+        function canvasÖlçüsünüTənzimlə() {
+            // CSS tərəfindən verilən `offsetWidth` və `offsetHeight` dəyərlərini götürür
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
 
         function ilkinYüklənmə() {
+            canvasÖlçüsünüTənzimlə(); // Başlanğıcda ölçü tənzimlənməsi
             bestScoreGosterici.textContent = `Ən yüksək skorunuz: ${getBestScore()}`;
             sıralamanıYüklə(); 
             yenilənməAralığı = isMobile() ? mobilSürət : desktopSürət; 
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
         }
 
         ilkinYüklənmə();
 
         window.addEventListener('resize', () => {
-             canvas.width = canvas.offsetWidth;
-             canvas.height = canvas.offsetHeight;
+             canvasÖlçüsünüTənzimlə(); // Ekran ölçüsü dəyişdikdə yenidən tənzimlə
              yenilənməAralığı = isMobile() ? mobilSürət : desktopSürət; 
         });
     </script>

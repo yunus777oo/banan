@@ -8,7 +8,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Changa+One:ital@0;1&family=Varela+Round&display=swap');
         
         body {
-            /* ... (Stil kodları eyni qalır) ... */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,7 +21,6 @@
         }
 
         #ana-konteyner {
-            /* ... (Stil kodları eyni qalır) ... */
             display: flex;
             flex-wrap: nowrap;
             justify-content: center;
@@ -36,7 +34,6 @@
         }
 
         #oyun-konteyner {
-            /* ... (Stil kodları eyni qalır) ... */
             flex-shrink: 0;
             width: 650px;
             max-width: 95%;
@@ -232,7 +229,6 @@
         }
         
         .klik-effekti {
-            /* ... (Stil kodları eyni qalır) ... */
             position: absolute;
             font-size: 25px;
             font-weight: bold;
@@ -249,7 +245,6 @@
         }
 
         #sıralama-konteyner {
-            /* ... (Stil kodları eyni qalır) ... */
             flex-shrink: 0;
             width: 250px;
             max-width: 95%;
@@ -265,7 +260,7 @@
             z-index: 0;
         }
         
-        /* ... (Digər media sorğuları eyni qalır) ... */
+        /* Əlavə media sorğuları burada ola bilər */
     </style>
 </head>
 <body>
@@ -342,13 +337,13 @@
         const finalBestScoreGosterici = document.getElementById('final-best-score');
         const başlamaMenyu = document.getElementById('başlama-menyu');
         const istifadəçiAdıInput = document.getElementById('istifadəçi-adı-input');
-        const təhlükəsizlikMesaj = document.getElementById('təhlükəsizlik-mesaj'); // Yeni element
+        const təhlükəsizlikMesaj = document.getElementById('təhlükəsizlik-mesaj');
         
         const bananaSəsi = document.getElementById('banana-səsi');
         const bombaSəsi = document.getElementById('bomba-səsi');
         const bitdiSəsi = document.getElementById('bitdi-səsi');
-        const meymunSəsi = document.getElementById('meymun-səsi'); // Yeni səs
-        const zirehSəsi = document.getElementById('zireh-səsi'); // Yeni səs
+        const meymunSəsi = document.getElementById('meymun-səsi');
+        const zirehSəsi = document.getElementById('zireh-səsi');
 
         const LOCAL_STORAGE_KEY = 'banana_best_score';
         const USER_NAME_KEY = 'banana_user_name';
@@ -388,8 +383,8 @@
         let oyunAktiv = false;
 
         let cariObyekt = null; 
-        let təhlükəsizlikRejimiAktiv = false; // Yeni dəyişən
-        const təhlükəsizlikMüddəti = 10000; // 60 saniyə
+        let təhlükəsizlikRejimiAktiv = false;
+        const təhlükəsizlikMüddəti = 10000; // 10 saniyə (İstifadəçinin tələbinə uyğun olaraq dəyişdirildi)
 
         let storedName = localStorage.getItem(USER_NAME_KEY);
         if (storedName) {
@@ -446,7 +441,7 @@
             } else if (cariObyekt.növü === 'bomba') {
                 ctx.fillText('💣', mərkəzX, mərkəzY);
             } else if (cariObyekt.növü === 'meymun') {
-                ctx.fillText('🐒', mərkəzX, mərkəzY); // Meymun simvolu
+                ctx.fillText('🐒', mərkəzX, mərkəzY);
             }
 
             ctx.restore();
@@ -463,7 +458,7 @@
             zirehSəsi.play(); 
             təhlükəsizlikMesaj.style.display = 'block';
 
-            let saniyə = 60;
+            let saniyə = təhlükəsizlikMüddəti / 1000;
             təhlükəsizlikMesaj.textContent = `🐒 Zireh Aktiv! ${saniyə}s 🛡️`;
 
             const intervalId = setInterval(() => {
@@ -474,7 +469,7 @@
                     clearInterval(intervalId);
                     təhlükəsizlikRejimiAktiv = false;
                     təhlükəsizlikMesaj.style.display = 'none';
-                    obyektYeriYenilə(); // Rejim bitdikdə obyekti yenilə
+                    obyektYeriYenilə();
                 }
             }, 1000); 
         }
@@ -490,7 +485,7 @@
                 effekt.style.color = '#FF5722';
             } else if (növü === 'meymun') {
                 effekt.textContent = '🛡️ ZİREH! 🛡️';
-                effekt.style.color = '#7289DA'; // Discord rəngi
+                effekt.style.color = '#7289DA';
             }
             
             effekt.classList.add('klik-effekti');
@@ -507,7 +502,6 @@
         }
 
         function barıYenilə() {
-            // ... (Bar yenilənməsi funksiyası eyni qalır) ...
             if (!oyunAktiv) return;
 
             cariBarDəyəri -= azalmaSürəti;
@@ -537,7 +531,6 @@
         }
         
         function xalıYaddaSaxla(yekunXal) {
-            // ... (Xalı yadda saxlama funksiyası eyni qalır) ...
             if (yekunXal === 0) return;
 
             db.collection("leaderboard").add({
@@ -554,7 +547,6 @@
         }
 
         function sıralamanıYüklə() {
-            // ... (Sıralamanı yükləmə funksiyası eyni qalır) ...
             sıralamaListi.innerHTML = '<li><span class="sıra-adı">Yüklənir...</span></li>';
 
             db.collection("leaderboard")
@@ -587,21 +579,19 @@
         }
 
         function oyunuBitir() {
-            // ... (Oyunu bitirmə funksiyası eyni qalır) ...
             bitdiSəsi.play();
             updateBestScore(xal);
             sonXalGosterici.textContent = xal;
             finalBestScoreGosterici.textContent = `Ən Yaxşı Yerli Xal: ${getBestScore()}`;
             oyunBitdiMesaj.style.display = 'flex';
             canvas.style.opacity = '0.3';
-            təhlükəsizlikMesaj.style.display = 'none'; // Bitəndə gizlət
+            təhlükəsizlikMesaj.style.display = 'none';
             təhlükəsizlikRejimiAktiv = false;
             
             xalıYaddaSaxla(xal); 
         }
 
         function yenilə(cariVaxt) {
-            // ... (Yeniləmə funksiyası eyni qalır) ...
             if (!oyunAktiv) return;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -642,11 +632,17 @@
                     bananaSəsi.currentTime = 0;
                     bananaSəsi.play();
                 } else if (cariObyekt.növü === 'bomba') { 
-                    xal = Math.max(0, xal - 3); 
-                    cariBarDəyəri -= bombaCəzası; 
-                    yaratKlikEffekti(klikX, klikY, 'bomba');
-                    bombaSəsi.currentTime = 0;
-                    bombaSəsi.play();
+                    if (təhlükəsizlikRejimiAktiv) {
+                        yaratKlikEffekti(klikX, klikY, 'bomba'); 
+                        bombaSəsi.currentTime = 0;
+                        bombaSəsi.play();
+                    } else {
+                        xal = Math.max(0, xal - 3); 
+                        cariBarDəyəri -= bombaCəzası; 
+                        yaratKlikEffekti(klikX, klikY, 'bomba');
+                        bombaSəsi.currentTime = 0;
+                        bombaSəsi.play();
+                    }
                 } else if (cariObyekt.növü === 'meymun') {
                     meymunSəsi.currentTime = 0;
                     meymunSəsi.play();
@@ -682,18 +678,24 @@
                 klikY >= cariObyekt.y - tolerantlıq &&
                 klikY <= cariObyekt.y + cariObyekt.ölçü + tolerantlıq
             ) {
-                 if (cariObyekt.növü === 'banana') {
+                if (cariObyekt.növü === 'banana') {
                     xal++;
                     cariBarDəyəri += artırmaDəyəri;
                     yaratKlikEffekti(klikX, klikY, 'banana');
                     bananaSəsi.currentTime = 0;
                     bananaSəsi.play();
                 } else if (cariObyekt.növü === 'bomba') { 
-                    xal = Math.max(0, xal - 3); 
-                    cariBarDəyəri -= bombaCəzası; 
-                    yaratKlikEffekti(klikX, klikY, 'bomba');
-                    bombaSəsi.currentTime = 0;
-                    bombaSəsi.play();
+                    if (təhlükəsizlikRejimiAktiv) {
+                        yaratKlikEffekti(klikX, klikY, 'bomba');
+                        bombaSəsi.currentTime = 0;
+                        bombaSəsi.play();
+                    } else {
+                        xal = Math.max(0, xal - 3); 
+                        cariBarDəyəri -= bombaCəzası; 
+                        yaratKlikEffekti(klikX, klikY, 'bomba');
+                        bombaSəsi.currentTime = 0;
+                        bombaSəsi.play();
+                    }
                 } else if (cariObyekt.növü === 'meymun') {
                     meymunSəsi.currentTime = 0;
                     meymunSəsi.play();
